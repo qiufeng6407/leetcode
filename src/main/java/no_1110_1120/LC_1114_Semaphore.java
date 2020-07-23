@@ -1,72 +1,79 @@
 package no_1110_1120;
+
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 public class LC_1114_Semaphore {
 	
 	public LC_1114_Semaphore() {
         
     }
 
-	private volatile boolean printFirstFinish;
-	private volatile boolean printSecondFinish;
-	
-	private Object lock = new Object();
+	private Semaphore printSecondSemaphore = new Semaphore(0);
+	private Semaphore printThirdSemaphore = new Semaphore(0);
 
     public void first(Runnable printFirst) throws InterruptedException {
-        synchronized (lock) {
-	        // printFirst.run() outputs "first". Do not change or remove this line.
-	        printFirst.run();
-	        printFirstFinish = true;
-	        lock.notifyAll();
-		}
+        // printFirst.run() outputs "first". Do not change or remove this line.
+        printFirst.run();
+        printSecondSemaphore.release();
     }
 
     public void second(Runnable printSecond) throws InterruptedException {
-        synchronized (lock) {
-        	while (!printFirstFinish) {
-        		lock.wait();
-        	}
-	        // printSecond.run() outputs "second". Do not change or remove this line.
-	        printSecond.run();
-	        printSecondFinish = true;
-	        lock.notifyAll();
-		}
+		printSecondSemaphore.acquire();
+        // printSecond.run() outputs "second". Do not change or remove this line.
+        printSecond.run();
+        printThirdSemaphore.release();
     }
 
     public void third(Runnable printThird) throws InterruptedException {
-        synchronized (lock) {
-        	while (!printSecondFinish) {
-        		System.out.println(3);
-        		lock.wait();
-        	}
-	        // printThird.run() outputs "third". Do not change or remove this line.
-	        printThird.run();
-        }
+    	printThirdSemaphore.acquire();
+        // printThird.run() outputs "third". Do not change or remove this line.
+        printThird.run();
     }
 
 	public static void main(String[] args) throws InterruptedException {
+		LC_1114_Semaphore lc = new LC_1114_Semaphore();
 		
-		
-		new Thread(new Runnable() {
-			
+		ThreadPoolExecutor ex = new ThreadPoolExecutor(10, 10, 10000, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+
+		ex.execute(new Runnable() {
 			@Override
 			public void run() {
 				try {
-
-					LC_1114_Semaphore lc = new LC_1114_Semaphore();
-
 					lc.second(new Runnable() {
 						@Override
 						public void run() {
 							System.out.println("second");
 						}
 					});
-					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		ex.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
 					lc.first(new Runnable() {
 						@Override
 						public void run() {
-							System.out.println("one");
+							System.out.println("first");
 						}
 					});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 
+		ex.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
 					lc.third(new Runnable() {
 						@Override
 						public void run() {
@@ -74,11 +81,10 @@ public class LC_1114_Semaphore {
 						}
 					});
 				} catch (Exception e) {
-					// TODO: handle exception
 					e.printStackTrace();
 				}
 			}
-		}).start();
+		});
 	}
 
 }
