@@ -59,16 +59,13 @@ public class BlockQueue<E> {
 		final BlockQueue<String> bq = new BlockQueue<>(3);
 		
 		for (int i = 0; i < 3; i++) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					while (true) {
-						try {
-							bq.enq(UUID.randomUUID().toString());
-							Thread.sleep(100);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+			new Thread(() -> {
+				while (true) {
+					try {
+						bq.enq(UUID.randomUUID().toString());
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
 				}
 			}).start();
@@ -76,16 +73,13 @@ public class BlockQueue<E> {
 		
 
 		for (int i = 0; i < 2; i++) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					while (true) {
-						try {
-							bq.deq();
-							Thread.sleep(500);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+			new Thread(() -> {
+				while (true) {
+					try {
+						bq.deq();
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
 				}
 			}).start();
