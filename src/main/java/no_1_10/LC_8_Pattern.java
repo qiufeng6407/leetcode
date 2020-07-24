@@ -26,24 +26,26 @@ public class LC_8_Pattern {
 	public static void main(String[] args) {
 		LC_8_Pattern lc = new LC_8_Pattern();
 
-		System.out.println(lc.myAtoi("20000000000000000000")); // -2147483647
-		System.out.println(lc.myAtoi("-5-")); // -5
-		System.out.println(lc.myAtoi("-2147483649")); // -2147483648
-		System.out.println(lc.myAtoi("-91283472332")); // -2147483648
-		System.out.println(lc.myAtoi("-3.14159")); // -3
-		System.out.println(lc.myAtoi("3.14159")); // 3
-		System.out.println(lc.myAtoi(null)); // 0
-		System.out.println(lc.myAtoi("")); // 0
-		System.out.println(lc.myAtoi("  ")); // 0
-		System.out.println(lc.myAtoi("42")); // 42
-		System.out.println(lc.myAtoi("-42")); // -42
-		System.out.println(lc.myAtoi("  -42")); // -42
-		System.out.println(lc.myAtoi("   42")); // 42
-		System.out.println(lc.myAtoi("   a42")); // 0
-		System.out.println(lc.myAtoi("   -a42")); // 0
-		System.out.println(lc.myAtoi("   -4a2")); // -4
-		System.out.println(lc.myAtoi("  -4 d")); // -4
-		System.out.println(lc.myAtoi("  -4 3")); // -4
+		assert lc.myAtoi("-5-") == -5 : "";
+		assert lc.myAtoi("20000000000000000000") == 2147483647 : "";
+		assert lc.myAtoi("-2147483649") == -2147483648 : "";
+		assert lc.myAtoi("-91283472332") == -2147483648 : "";
+		assert lc.myAtoi("-3.14159") == -3 : "";
+		assert lc.myAtoi("3.14159") == 3 : "";
+		assert lc.myAtoi(null) == 0 : "";
+		assert lc.myAtoi("") == 0 : "";
+		assert lc.myAtoi("   ") == 0 : "";
+		assert lc.myAtoi("-42") == -42 : "";
+		assert lc.myAtoi("42") == 42 : "";
+		assert lc.myAtoi("   -42") == -42 : "";
+		assert lc.myAtoi("   42") == 42 : "";
+		assert lc.myAtoi("   -a42") == 0 : "";
+		assert lc.myAtoi("   42") == 42 : "";
+		assert lc.myAtoi("   -4a2") == -4 : "";
+		assert lc.myAtoi("   4a2") == 4 : "";
+		assert lc.myAtoi("   -42 d") == -42 : "";
+		assert lc.myAtoi("   42 3") == 42 : "";
+		
 	}
 
 }
