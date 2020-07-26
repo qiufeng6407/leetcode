@@ -12,8 +12,7 @@ public class LC_329_Base2 {
 		int max = 1;
 		for (int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {
-				int temp = longestIncreasingPath(matrix, dp, i, j);
-				max = Math.max(max, temp);
+				max = Math.max(max, longestIncreasingPath(matrix, dp, i, j));
 			}
 		}
 		return max;
