@@ -1,4 +1,4 @@
-package no_390_399;
+package no_0390_0399;
 
 public class LC_392_Base {
 

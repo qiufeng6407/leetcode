@@ -1,4 +1,4 @@
-package no_10_19;
+package no_0010_0019;
 
 public class LC_12_Base2 {
 

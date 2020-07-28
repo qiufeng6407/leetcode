@@ -1,37 +1,37 @@
-package no_1_9;
-public class LC_5_Dp {
+package no_0001_0009;
+public class LC_5_Base {
 
 	public String longestPalindrome(String s) {
 		if (s == null || s.isEmpty()) {
 			return "";
 		}
 		
-		int length = s.length();
-		char[] sc = s.toCharArray();
-		boolean[][] dp = new boolean[length][length];
-		int start = 0, max = 1;
-
-		for (int i = 1; i < length; i++) {
-			dp[i][i] = true;
-		}
-		for (int j = 1; j < length; j++) {
-			for (int i = 0; i < j; i ++) {
-				if (j - i > 2) {
-					dp[i][j] = dp[i + 1][j - 1] && sc[i] == sc[j];
-				} else {
-					dp[i][j] = sc[i] == sc[j];
-				}
-				if (dp[i][j] && j - i + 1 > max) {
-					max = j - i + 1;
-					start = i;
-				}
+		int start = 0, end = 0;
+		for (int i = 0; i < s.length(); i ++) {
+			int x = i, y = i + 1;
+			while (x >= 0 && y < s.length() && s.charAt(x) == s.charAt(y)) {
+				x --;
+				y ++;
+			}
+			if (y - x> end -start) {
+				start = x; end = y;
+			}
+			
+			x = i - 1; y = i + 1;
+			while (x >= 0 && y < s.length() && s.charAt(x) == s.charAt(y)) {
+				x --;
+				y ++;
+			}
+			if (y - x > end -start) {
+				start = x; end = y;
 			}
 		}
-		return s.substring(start, start + max);
+		
+		return s.substring(start + 1, end);
     }
 
 	public static void main(String[] args) {
-		LC_5_Dp lc = new LC_5_Dp();
+		LC_5_Base lc = new LC_5_Base();
 		
 		System.out.println(lc.longestPalindrome("abcabcbb")); // bcb
 		System.out.println(lc.longestPalindrome("bbbbb")); // bbbbb

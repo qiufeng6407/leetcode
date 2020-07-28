@@ -1,7 +1,6 @@
-package no_410_419;
+package no_0410_0419;
 
-public class LC_410_Base {
-
+public class LC_410_Binary {
 	public int splitArray(int[] nums, int m) {
 		return splitArray(nums, m, 0);
 	}
@@ -46,7 +45,7 @@ public class LC_410_Base {
 	}
 
 	public static void main(String[] args) {
-		LC_410_Base lc = new LC_410_Base();
+		LC_410_Binary lc = new LC_410_Binary();
 
 		System.out.println("||" + lc.splitArray(new int[] { 2, 3, 1, 2, 4, 3 }, 5));
 		System.out.println("||" + lc.splitArray(new int[] { 7, 2, 5, 10, 8 }, 2));

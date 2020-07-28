@@ -1,4 +1,4 @@
-package no_1_9;
+package no_0001_0009;
 public class LC_7_Base2 {
 
     public int reverse(int x) {
