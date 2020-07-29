@@ -1,8 +1,6 @@
 package no_1110_1119;
 
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.IntConsumer;
 
 public class LC_1116_Semaphore {
