@@ -1,65 +1,99 @@
 package ms;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Random;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
- * 超内存限制
+ * 面试题 04.01. 节点间通路
+ * 
  * @author jlgc
  *
  */
 public class MS_04_01_Base {
-	
-	class Solution {
-		@SuppressWarnings("unchecked")
-		public boolean findWhetherExistsPath(int n, int[][] graph, int start, int target) {
-			if (n == 0) {
-				return false;
-			}
-			List<Integer>[] nodes = new ArrayList[n];
-			for (int i = 0; i < graph.length; i++) {
-				if (graph[i][0] == start && graph[i][1] == target) {
-					return true;
-				}
-				if (start == target && graph[i][0] == graph[i][1] && start == graph[i][0]) {
-					return true;
-				}
-				if (nodes[graph[i][0]] == null) {
-					nodes[graph[i][0]] = new ArrayList<>();
-				}
-				nodes[graph[i][0]].add(graph[i][1]);
-			}
-			boolean[] visited = new boolean[n];
-			return dfs(nodes, start, target, visited);
-		}
 
-		public boolean dfs(List<Integer>[] nodes, int idx, int target, boolean[] visited) {
-			visited[idx] = true;
-			if (nodes[idx] == null) {
-				return false;
+	class Solution {
+		public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+			if (image == null || image.length == 0 || image[sr][sc] == newColor) {
+				return image;
 			}
-			for (int n : nodes[idx]) {
-				if (visited[n]) {
-					continue;
+			boolean[][] visited = new boolean[image.length][image[0].length];
+			bfs(image, sr, sc, newColor, visited);
+			return image;
+		}
+		
+		public void bfs(int[][] image, int sr, int sc, int newColor, boolean[][] visited) {
+			Queue<int[]> q = new LinkedList<int[]>();
+			q.offer(new int[] { sr, sc });
+			int oldColor = image[sr][sc];
+			
+			while (!q.isEmpty()) {
+				int[] curr = q.poll();
+				int r = curr[0], c = curr[1];
+				if (visited[r][c]) continue;
+				if (image[r][c] == oldColor) {
+					image[r][c] = newColor;
+					visited[r][c] = true;
 				}
-				if (n == target) {
-					return true;
+				if (r > 0 && image[r - 1][c] == oldColor && !visited[r - 1][c]) {
+					q.offer(new int[] { r - 1, c });
 				}
-				if (dfs(nodes, n, target, visited)) {
-					return true;
+				if (r < image.length - 1 && image[r + 1][c] == oldColor && !visited[r + 1][c]) {
+					q.offer(new int[] { r + 1, c });
+				}
+				if (c > 0 && image[r][c - 1] == oldColor && !visited[r][c - 1]) {
+					q.offer(new int[] { r, c - 1 });
+				}
+				if (c < image[0].length - 1 && image[r][c + 1] == oldColor && !visited[r][c + 1]) {
+					q.offer(new int[] { r, c + 1 });
 				}
 			}
-			return false;
 		}
 	}
-	
+
 	@Test
 	public void test() {
 		Solution s = new Solution();
-		Assertions.assertTrue(s.findWhetherExistsPath(3, new int[][] { {0, 1}, {0, 2}, {1, 2}, {1, 2} }, 0, 2));
+		int[][] image = new int[][] { { 1, 1, 1 }, { 1, 1, 0 }, { 1, 0, 1 } };
+		for (int i = 0; i < image.length; i++) {
+			for (int j = 0; j < image[0].length; j++) {
+				System.out.print(String.format("%02d ", image[i][j]));
+			}
+			System.out.println();
+		}
+		image = s.floodFill(image, 1, 1, 2);
+		System.out.println("-----------");
+		for (int i = 0; i < image.length; i++) {
+			for (int j = 0; j < image[0].length; j++) {
+				System.out.print(String.format("%02d ", image[i][j]));
+			}
+			System.out.println();
+		}
+		System.out.println();
 	}
 	
+	@Test
+	public void test2() {
+		Solution s = new Solution();
+		int[][] image = new int[10][12];
+		Random r = new Random();
+		for (int i = 0; i < image.length; i++) {
+			for (int j = 0; j < image[0].length; j++) {
+				System.out.print(String.format("%d ", image[i][j] = r.nextInt(2)));
+			}
+			System.out.println();
+		}
+		image = s.floodFill(image, 1, 1, 2);
+		System.out.println("-----------");
+		for (int i = 0; i < image.length; i++) {
+			for (int j = 0; j < image[0].length; j++) {
+				System.out.print(String.format("%d ", image[i][j]));
+			}
+			System.out.println();
+		}
+		System.out.println();
+	}
+
 }
