@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
  * @author jlgc
  *
  */
-public class LC_1518_Base {
+public class LC_1518_BackTrack2 {
 	class Solution {
 		final char[][] btns = new char[][] { { 'a', 'b', 'c' }, { 'd', 'e', 'f' }, { 'g', 'h', 'i' }, { 'j', 'k', 'l' },
 			{ 'm', 'n', 'o' }, { 'p', 'q', 'r', 's' }, { 't', 'u', 'v' }, { 'w', 'x', 'y', 'z' } };
@@ -21,20 +21,18 @@ public class LC_1518_Base {
 			if (digits == null || digits.isEmpty()) {
 				return res;
 			}
-			char[] digitchar = digits.toCharArray();
-			letterCombinations(0, digitchar, "", res);
+			letterCombinations(0, digits.toCharArray(), new char[digits.length()], res);
 			return res;
 		}
 
-		public void letterCombinations(int idx, char[] digitchar, String curr, List<String> res) {
+		public void letterCombinations(int idx, char[] digitchar, char[] target, List<String> res) {
 			int i = Integer.parseInt(String.valueOf(digitchar[idx])) - 2;
-			if (idx == digitchar.length - 1) {
-				for (int x = 0; x < btns[i].length; x ++) {
-					res.add(curr + btns[i][x]);
-				}
-			} else {
-				for (int x = 0; x < btns[i].length; x ++) {
-					letterCombinations(idx + 1, digitchar, curr + btns[i][x], res);
+			for (int x = 0; x < btns[i].length; x ++) {
+				target[idx] = btns[i][x];
+				if (idx == digitchar.length - 1) {
+					res.add(new String(target));
+				} else {
+					letterCombinations(idx + 1, digitchar, target, res);
 				}
 			}
 		}

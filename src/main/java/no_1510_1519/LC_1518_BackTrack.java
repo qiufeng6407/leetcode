@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
  * @author jlgc
  *
  */
-public class LC_1518_Base {
+public class LC_1518_BackTrack {
 	class Solution {
 		final char[][] btns = new char[][] { { 'a', 'b', 'c' }, { 'd', 'e', 'f' }, { 'g', 'h', 'i' }, { 'j', 'k', 'l' },
 			{ 'm', 'n', 'o' }, { 'p', 'q', 'r', 's' }, { 't', 'u', 'v' }, { 'w', 'x', 'y', 'z' } };
@@ -22,19 +22,21 @@ public class LC_1518_Base {
 				return res;
 			}
 			char[] digitchar = digits.toCharArray();
-			letterCombinations(0, digitchar, "", res);
+			letterCombinations(0, digitchar, new StringBuffer(), res);
 			return res;
 		}
 
-		public void letterCombinations(int idx, char[] digitchar, String curr, List<String> res) {
+		public void letterCombinations(int idx, char[] digitchar, StringBuffer curr, List<String> res) {
 			int i = Integer.parseInt(String.valueOf(digitchar[idx])) - 2;
 			if (idx == digitchar.length - 1) {
 				for (int x = 0; x < btns[i].length; x ++) {
-					res.add(curr + btns[i][x]);
+					res.add(curr.append(btns[i][x]).toString());
+					curr.replace(idx, idx + 1, "");
 				}
 			} else {
 				for (int x = 0; x < btns[i].length; x ++) {
-					letterCombinations(idx + 1, digitchar, curr + btns[i][x], res);
+					letterCombinations(idx + 1, digitchar, curr.append(btns[i][x]), res);
+					curr.replace(idx, idx + 1, "");
 				}
 			}
 		}
