@@ -19,7 +19,7 @@ public class LC_0891_Base2 {
 			long[] pow2 = new long[A.length];
 			pow2[0] = 1;
 			for (int i = 1; i < A.length; i++) {
-				pow2[i] = (pow2[i - 1] * 2) % mod;
+				pow2[i] = (pow2[i - 1] << 1) % mod;
 			}
 			long count = 0;
 			for (int i = 0; i < A.length; i++) {
