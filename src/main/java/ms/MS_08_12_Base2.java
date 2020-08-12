@@ -54,12 +54,8 @@ public class MS_08_12_Base2 {
 	    	used[row][col] += val;
 			for (int j = 1; row + j < n; j++) {
 				used[row + j][col] += val;
-			}
-			for (int j = 1; row + j < n && col + j < n; j++) {
-				used[row + j][col + j] += val;
-			}
-			for (int j = 1; row + j < n && col - j >= 0; j++) {
-				used[row + j][col - j] += val;
+				if (col + j < n) used[row + j][col + j] += val;
+				if (col - j >= 0) used[row + j][col - j] += val;
 			}
 	    }
 	}
