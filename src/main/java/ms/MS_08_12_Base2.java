@@ -13,44 +13,41 @@ import org.junit.jupiter.api.Test;
  * @author jlgc
  *
  */
-public class MS_08_12_Base {
+public class MS_08_12_Base2 {
 	
 	class Solution {
-		char[] base;
 	    public List<List<String>> solveNQueens(int n) {
 	    	List<List<String>> ans = new ArrayList<>();
 	    	int[][] used = new int[n][n];
-	    	base = new char[n];
+	    	char[][] res = new char[n][n];
 	    	for (int i = 0; i < n; i++) {
-	    		base[i] = '.';
+	    		for (int j = 0; j < n; j++) {
+	    			res[i][j] = '.';
+	    		}
 	    	}
-		    solveNQueens(n, used, ans, 0, new int[n]);
+		    solveNQueens(n, used, ans, 0, res);
 	    	return ans;
 	    }
 	    
-	    public void solveNQueens(int n, int[][] used, List<List<String>> ans, int row, int[] res) {
+	    public void solveNQueens(int n, int[][] used, List<List<String>> ans, int row, char[][] res) {
 	    	for (int col = 0; col < n; col++) {
 	    		if (used[row][col] == 0) {
-	    			res[row] = col;
+	    			res[row][col] = 'Q';
 	    			if (row == n - 1) {
-	    				add(ans, res);
+		    			List<String> temp = new ArrayList<>();
+		    			for (char[] re : res) {
+		    				temp.add(new String(re));
+		    			}
+		    			ans.add(temp);
+		    			res[row][col] = '.';
 	    				continue;
 	    			}
 	    			addValue(n, used, col, row, 1);
 	    			solveNQueens(n, used, ans, row + 1, res);
 	    			addValue(n, used, col, row, -1);
+	    			res[row][col] = '.';
 	    		}
 	    	}
-	    }
-	    
-	    private void add(List<List<String>> ans, int[] res) {
-	    	List<String> temp = new ArrayList<>();
-	    	for (int i = 0; i < res.length; i++) {
-	    		base[res[i]] = 'Q';
-	    		temp.add(new String(base));
-	    		base[res[i]] = '.';
-	    	}
-	    	ans.add(temp);
 	    }
 	    
 	    private void addValue(int n, int[][] used, int col, int row, int val) {
