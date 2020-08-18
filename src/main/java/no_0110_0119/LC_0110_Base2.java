@@ -1,41 +1,175 @@
 package no_0110_0119;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 /**
  * 
  * @author jlgc
  * 
- * 自底向上方法
+ *         自底向上方法
  *
  */
 public class LC_0110_Base2 {
-	public class TreeNode {
-		int val;
-		TreeNode left;
-		TreeNode right;
+	class Solution {
+		public double[] sampleStats(int[] count) {
+			double[] ans = new double[5];
+			ans[0] = 256;
+			ans[1] = -1;
+			int i = 0, j = count.length - 1, countL = 0, countR = 0, maxCount = 0;
+			long sum = 0, sumCount = 0;
+			
+			// i表示做指针，j表示右指针，countL表示左边数字数量差值，countR表示右边数字数量差值
+			while (i < j) {
+				if (count[i] == 0) {
+					i++;
+					continue;
+				}
+				if (ans[0] == 256) {
+					// 防止出现整个数组只有一个数字的情况
+					ans[0] = i;
+					ans[1] = i;
+					ans[4] = i;
+					maxCount = count[i];
+				}
+				if (count[j] == 0) {
+					j--;
+					continue;
+				}
+				ans[1] = Math.max(ans[1], j);
 
-		TreeNode(int x) {
-			val = x;
+				if (count[i] >= maxCount) {
+					ans[4] = i;
+					maxCount = count[i];
+				}
+				if (count[j] >= maxCount) {
+					ans[4] = j;
+					maxCount = count[j];
+				}
+				if (countL == 0) {
+					countL = count[i];
+				}
+				if (countR == 0) {
+					countR = count[j];
+				}
+
+				if (countL == countR) {
+					sum += count[i] * i + count[j] * j;
+					sumCount += (count[i] + count[j]);
+					countL = 0;
+					countR = 0;
+					i++;
+					j--;
+				} else if (countL > countR) {
+					sum += count[j] * j;
+					sumCount += count[j];
+					countL = countL - countR;
+					countR = 0;
+					j--;
+				} else {
+					sum += count[i] * i;
+					sumCount += count[i];
+					countR = countR - countL;
+					countL = 0;
+					i++;
+				}
+			}
+			if (countL == 0 && countR == 0) {
+				ans[3] = (i + j) * 1.0 / 2;
+			} else if (countR == 0) {
+				ans[3] = i;
+			} else {
+				ans[3] = j;
+			}
+			if (i != j) {
+				sum += countL * i + countR * j;
+				sumCount += (countL + countR);
+			} else {
+				sum += count[i] * i;
+				sumCount += count[i];
+			}
+
+			ans[2] = sum * 1.0 / sumCount;
+			return ans;
 		}
 	}
 
-	class Solution {
+	@Test
+	@DisplayName("3")
+	public void test1() {
+		Solution s = new Solution();
+		double[] ans = s.sampleStats(new int[] { 0, 1, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 
-		public boolean isBalanced(TreeNode root) {
-			return depth(root) >= 0;
+		for (double d : ans) {
+			System.err.println(d);
 		}
+		System.err.println("----");
+	}
 
-		private int depth(TreeNode root) {
-			if (root == null) {
-				return 0;
-			}
-			int leftDep = depth(root.left);
-			int rightDep = depth(root.right);
-			if (leftDep == -1 || rightDep == -1 || Math.abs(rightDep - leftDep) > 1) {
-				// 此节点不平衡则直接返回-1
-				return -1;
-			}
-			return Math.max(leftDep, rightDep) + 1;
+	@Test
+	@DisplayName("3")
+	public void test2() {
+		Solution s = new Solution();
+		double[] ans = s.sampleStats(new int[] { 0, 4, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+		for (double d : ans) {
+			System.err.println(d);
 		}
+		System.err.println("----");
+	}
+
+	@Test
+	@DisplayName("3")
+	public void test3() {
+		Solution s = new Solution();
+		double[] ans = s.sampleStats(new int[] { 254, 254, 254, 254, 2, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254,
+				254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254,
+				254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254,
+				254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254,
+				254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254,
+				254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254,
+				254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254,
+				254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254,
+				254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254,
+				254, 254, 254, 254, 254, 254, 255, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254,
+				254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254,
+				254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254, 254,
+				254, 254, 254, 254, 254, 254, 254, 254, 254 });
+		for (double d : ans) {
+			System.err.println(d);
+		}
+		System.err.println("----");
+	}
+	
+	@Test
+	@DisplayName("3")
+	public void test4() {
+		Solution s = new Solution();
+		double[] ans = s.sampleStats(new int[] { 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+		for (double d : ans) {
+			System.err.println(d);
+		}
+		System.err.println("----");
 	}
 
 }
